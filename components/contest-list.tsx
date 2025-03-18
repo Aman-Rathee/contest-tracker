@@ -21,7 +21,7 @@ export default function ContestList({ contests }: { contests: Contest[] }) {
     }
 
     return (
-        <div className="space-y-4 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 m-6">
             {sortedContests.map((contest) => (
                 <ContestCard key={contest.id} contest={contest} />
             ))}
@@ -98,8 +98,8 @@ function ContestCard({ contest }: { contest: Contest }) {
             <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
                     <div>
-                        <Badge className={`mb-2 ${getPlatformColor(contest.platform)}`}>
-                            {contest.platform.charAt(0).toUpperCase() + contest.platform.slice(1)}
+                        <Badge className={`mb-2 ${getPlatformColor(contest.platform.toLowerCase())}`}>
+                            {contest.platform}
                         </Badge>
                         <CardTitle className="text-xl">{contest.name}</CardTitle>
                     </div>
