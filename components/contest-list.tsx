@@ -6,26 +6,41 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input"
 
 export default function ContestList({ contests }: { contests: Contest[] }) {
+    const [searchTerm, setSearchTerm] = useState('');
     // Sort contests by start time (earliest first)
     const sortedContests = [...contests].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
 
-    if (contests.length === 0) {
-        return (
-            <div className="text-center py-12">
-                <h3 className="text-xl font-medium text-muted-foreground">No contests found</h3>
-                <p className="mt-2">Try selecting a different platform or check back later.</p>
-            </div>
-        )
-    }
+    const filteredContests = sortedContests.filter(contest =>
+        contest.platform.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 m-6">
-            {sortedContests.map((contest) => (
-                <ContestCard key={contest.id} contest={contest} />
-            ))}
-        </div>
+        <>
+            <div className="flex items-center justify-center">
+                <Input
+                    type="text"
+                    className="max-w-72 pl-10 pr-4 py-3 bg-white rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                    placeholder="Search contest..."
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+            {filteredContests.length === 0 ? (
+                <div className="text-center py-12">
+                    <h3 className="text-xl font-medium text-muted-foreground">No contests found</h3>
+                    <p className="mt-2">Try selecting a different platform or check back later.</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 m-6">
+                    {filteredContests.map((contest) => (
+                        <ContestCard key={contest.id} contest={contest} />
+                    ))}
+                </div>
+            )
+            }
+        </>
     )
 }
 
@@ -58,7 +73,7 @@ function ContestCard({ contest }: { contest: Contest }) {
         setTimeLeft(calculateTimeLeft())
         const timer = setInterval(() => {
             setTimeLeft(calculateTimeLeft())
-        }, 60000) // Update every minute
+        }, 60000)
 
         return () => clearInterval(timer)
     }, [contest.startTime])

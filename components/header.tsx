@@ -7,7 +7,7 @@ import { Code } from "lucide-react"
 
 export default function Header() {
     return (
-        <header className="border-b">
+        <header className="border-b mx-10">
             <div className="container mx-auto px-4 py-3 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2">
                     <Code className="h-6 w-6" />
@@ -19,7 +19,10 @@ export default function Header() {
                         <Link href="/">Home</Link>
                     </Button>
                     <Button variant="ghost" size="sm" asChild>
-                        <Link href="#">About</Link>
+                        <Link href="/contests">Contests</Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" asChild>
+                        <Link target="_blanck" href="https://github.com/Aman-Rathee/contest-tracker">Github</Link>
                     </Button>
                     <ModeToggle />
                 </div>
