@@ -17,6 +17,13 @@ interface CodeChefContest {
     contest_end_date: string;
 }
 
+interface LeetCodeContest {
+    title: string;
+    startTime: number;
+    duration: number;
+    titleSlug: string;
+}
+
 interface Contest {
     id: string | number;
     name: string;
@@ -41,6 +48,7 @@ export async function GET() {
                 url: `https://codeforces.com/contest/${contest.id}`,
             }));
 
+        // Fetch contests from CodeChef
         const chRes = await axios.get("https://www.codechef.com/api/list/contests/all?sort_by=START&sorting_order=asc&offset=0&mode=all");
         const chContests = chRes.data.future_contests.map((contest: CodeChefContest) => {
             const startTime = dayjs(contest.contest_start_date, "DD MMM YYYY HH:mm:ss");
@@ -55,7 +63,36 @@ export async function GET() {
                 url: `https://www.codechef.com/${contest.contest_code}`,
             }
         });
-        const finalRes = [...cfContests, ...chContests]
+
+        // Fetch contests from Codeforces
+        const graphqlQuery = {
+            query: `
+              query getContestList {
+                allContests {
+                  title
+                  startTime
+                  duration
+                  titleSlug
+                }
+              }
+            `
+        };
+
+        const lcRes = await axios.post("https://leetcode.com/graphql", graphqlQuery);
+        const contests = lcRes.data.data.allContests;
+        const now = Date.now();
+
+        const lcContests = contests.filter((contest: { startTime: number; }) => contest.startTime * 1000 > now).map((contest: LeetCodeContest) => {
+            return {
+                id: contest.titleSlug,
+                name: contest.title,
+                platform: "LeetCode",
+                startTime: contest.startTime,
+                duration: contest.duration,
+                url: `https://leetcode.com/contest/${contest.titleSlug}`,
+            }
+        })
+        const finalRes = [...cfContests, ...chContests, ...lcContests]
         return NextResponse.json(finalRes);
     } catch (error) {
         return NextResponse.json({ err: "Failed to fetch contests", error }, { status: 500 });

@@ -98,11 +98,11 @@ function ContestCard({ contest }: { contest: Contest }) {
     const getPlatformColor = (platform: string) => {
         switch (platform) {
             case "codeforces":
-                return "bg-red-100 text-red-800 hover:bg-red-200"
+                return "bg-blue-300 text-blue-800 hover:bg-blue-200"
             case "codechef":
-                return "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                return "bg-red-300 text-red-800 hover:bg-red-200"
             case "leetcode":
-                return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                return "bg-yellow-300 text-yellow-800 hover:bg-yellow-200"
             default:
                 return "bg-gray-100 text-gray-800 hover:bg-gray-200"
         }
