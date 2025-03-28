@@ -64,7 +64,7 @@ export async function GET() {
             }
         });
 
-        // Fetch contests from Codeforces
+        // Fetch contests from LeetCode
         const graphqlQuery = {
             query: `
               query getContestList {
