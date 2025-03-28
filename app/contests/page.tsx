@@ -4,7 +4,8 @@ import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 async function getContests(): Promise<Contest[]> {
-  const res = await fetch('/api/contests', {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const res = await fetch(`${apiUrl}/api/contests`, {
     cache: "no-store",
     next: { revalidate: 0 },
   });
